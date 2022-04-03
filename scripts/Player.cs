@@ -7,6 +7,7 @@ public class Player : KinematicBody2D
     [Export] public float _moveAccel = 1.0f;
     [Export] public float _moveMax = 32.0f;
     [Export] public float _throwStrength = 1.0f;
+    [Export] public AudioStream _footstepSfx;
 
     public bool Dead = false;
     
@@ -16,12 +17,24 @@ public class Player : KinematicBody2D
     private List<Block> _potentialGrabs = new List<Block>();
     private bool _leftMouseDown = false;
     private Block _grabbed = null;
+    private float _footstepTimer;
+    private Vector2 _vel;
+    
+    private AudioStreamPlayer _sfx;
+    private AudioStreamPlayer _sfxThrow;
+
+    private CPUParticles2D _footstepVFXLeft;
+    private CPUParticles2D _footstepVFXRight;
 
     public override void _Ready()
     {
         _sprite = GetNode<Sprite>("Sprite");
         _grabber = GetNode<Grabber>("Grabber");
         _trajectory = GetNode<Trajectory>("../Trajectory");
+        _sfx = GetNode<AudioStreamPlayer>("AudioStreamPlayer");
+        _sfxThrow = GetNode<AudioStreamPlayer>("AudioStreamPlayer2");
+        _footstepVFXLeft = GetNode<CPUParticles2D>("FootstepVFXLeft");
+        _footstepVFXRight = GetNode<CPUParticles2D>("FootstepVFXRight");
     }
 
     public override void _Process(float delta)
@@ -35,6 +48,30 @@ public class Player : KinematicBody2D
             _trajectory.Visible = false;
         }
 
+        if (_grabbed == null)
+        {
+            _footstepTimer -= delta * Mathf.Clamp(_vel.Length(), 1.0f, 10.0f);
+            _sprite.Offset = new Vector2(0.0f, Mathf.Sin(-Mathf.Clamp(_footstepTimer, 0.0f, 1.0f) * 5.0f));
+            if (_footstepTimer < 0.0f && _vel.Length() > 1.0f)
+            {
+                _sfx.Stream = _footstepSfx;
+                _sfx.Play();
+                _footstepTimer = 1.0f;
+                if (_vel.x < 0.0f)
+                {
+                    _footstepVFXLeft.Emitting = true;
+                    _footstepVFXLeft.Restart();
+                }
+                else
+                {
+                    _footstepVFXRight.Emitting = true;
+                    _footstepVFXRight.Restart();
+                }
+            }
+        }
+
+        _sprite.FlipH = _vel.x < 0.0f ? true : false;
+        
         if (Input.IsActionPressed("grab"))
         {
             if (!_leftMouseDown)
@@ -68,6 +105,7 @@ public class Player : KinematicBody2D
             if (_grabbed != null)
             {
                 _grabbed.Drop(GetThrowImpulse());
+                _sfxThrow.Play();
                 _grabbed = null;
                 _trajectory.Visible = false;
             }
@@ -103,14 +141,14 @@ public class Player : KinematicBody2D
         {
             Vector2 target = _grabber.GlobalPosition - (_grabber.GlobalPosition - GlobalPosition).Normalized() * deadzone;
             target.y = target.y = GlobalPosition.y;
-            Vector2 gravity = Vector2.Down * 98.0f;
-            Vector2 vel = (target - GlobalPosition).Clamped(_moveMax) + gravity;
+            Vector2 gravity = Vector2.Down * Game.Instance.Gravity;
+            _vel = (target - GlobalPosition).Clamped(_moveMax);
             if (_grabbed == null)
             {
-                MoveAndSlide(vel * _moveAccel + gravity);
+                MoveAndSlide(_vel * _moveAccel + gravity);
             }
 
-            float l = vel.x / _moveMax + 0.5f;
+            float l = _vel.x / _moveMax + 0.5f;
             _sprite.Rotation = Mathf.Lerp(-Mathf.Pi * 0.25f, Mathf.Pi * 0.25f, Mathf.Clamp(l, 0.0f, 1.0f));
         }
 

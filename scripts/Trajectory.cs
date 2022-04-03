@@ -18,13 +18,15 @@ public class Trajectory : Line2D
         {
             _previewPoints.Add((Points.Length / _preview.Count) * i);
         }
+
+        ZIndex = -1;
     }
     
     public override void _Process(float delta)
     {
         for (int i = 0; i < _preview.Count; i++)
         {
-            _previewPoints[i] += delta * 100.0f;
+            _previewPoints[i] += delta * 75.0f;
             int p = (int) _previewPoints[i];
             p = p % (Points.Length - 1);
             _preview[i].GlobalPosition = GlobalPosition + Points[p];
@@ -35,7 +37,7 @@ public class Trajectory : Line2D
     {
         Vector2 p = Vector2.Zero;
         Vector2 v = impulse;
-        Vector2 gravity = new Vector2(0.0f, 98.0f);
+        Vector2 gravity = new Vector2(0.0f, Game.Instance.Gravity);
         float step = 1.0f / 60.0f;
 
         Vector2[] points = new Vector2[Points.Length];
@@ -53,7 +55,7 @@ public class Trajectory : Line2D
             _preview[i].Texture = preview.Texture;
             _preview[i].Rotation = rot;
             Color col = preview.Modulate;
-            col.a *= 0.3f;
+            col.a *= 0.5f;
             _preview[i].Modulate = col;
         }
     }

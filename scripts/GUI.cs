@@ -19,14 +19,14 @@ public class GUI : CanvasLayer
         base._Process(delta);
 
         int scoreInMS = (int)(Game.Instance.Score * 1000.0f);
-        int ms = scoreInMS % 1000;
+        int ms = (scoreInMS % 1000) / 100;
         int seconds = (scoreInMS / 1000) % 60;
         int minutes = (scoreInMS / 1000 / 60);
 
         if (!Game.Instance.GameOver)
         {
-            _scoreLabel.Text = $"{minutes}:{seconds}:{ms}";
-            _loseScreenScore.Text = $"{minutes}:{seconds}:{ms}";
+            _scoreLabel.Text = $"{minutes}m {seconds}.{ms}s";
+            _loseScreenScore.Text = $"{minutes}m {seconds}.{ms}s";
         }
     }
 

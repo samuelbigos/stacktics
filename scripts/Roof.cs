@@ -25,7 +25,7 @@ public class Roof : StaticBody2D
               // do less damage if there's multiple objects in the way, with some falloff.
               float dmgMod = 1.0f / _contactingBodies.Count;
               dmgMod /= 1.0f - Mathf.Pow(1.0f - dmgMod, 3.0f);
-              crate.DoDamage(_damage * dmgMod * delta);
+              crate.DoDamage(_damage * dmgMod * delta * Game.Instance.DamageAmp);
           }
       }
 

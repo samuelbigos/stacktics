@@ -132,7 +132,7 @@ public class Block : RigidBody2D
         {
             if (_mouseWheel != 0.0f)
             {
-                state.AngularVelocity = _mouseWheel * _spinSpeed;
+                state.AngularVelocity = _mouseWheel * _spinSpeed / Engine.TimeScale;
                 _mouseWheel = 0.0f;
             }
             else

@@ -7,22 +7,37 @@ public class Game : Node2D
     [Export] public List<PackedScene> _blockScenes;
     [Export] public PackedScene _blockDestroyVFX;
     [Export] public float _spawnFreq;
+    [Export] public float _slowmoRegen = 0.1f;
+    [Export] public float _slowmoDegen = 0.25f;
     
     [Export] public Color WallColour;
     [Export] public Color PlayerColour;
 
+    [Export] public List<AudioStream> _destroySfx;
+    [Export] public AudioStream _dieSfx;
+
+    [Export] public float Gravity;
+    
     public static Game Instance;
 
     public float Score = 0.0f;
     public bool GameOver = false;
+    public float DamageAmp = 1.0f;
     
     private RandomNumberGenerator _rng = new RandomNumberGenerator();
     private GUI _GUI;
     private Player _player;
+    private AudioStreamPlayer _sfx;
+    private Camera2D _cam;
+    private ProgressBar _slowmoBar;
     private float _spawnTimer;
     private int _spawned = 0;
     private int _blocksLeft = 0;
     private int _blocksRight = 0;
+    private float _camYMax;
+    private float _slowmoVal = 1.0f;
+    private bool _slowmoCD;
+    private float _slowmoCDTimer;
     
     public override void _Ready()
     {
@@ -44,16 +59,31 @@ public class Game : Node2D
         GetNode<Sprite>("Floor/Sprite").Modulate = WallColour;
         GetNode<Sprite>("Player/Sprite").Modulate = PlayerColour;
         GetNode<Sprite>("Player/Grabber/Sprite").Modulate = PlayerColour;
+
+        _sfx = GetNode<AudioStreamPlayer>("AudioStreamPlayer");
+        _cam = GetNode<Camera2D>("Camera2D");
+        _camYMax = _cam.GlobalPosition.y;
+        _slowmoBar = GetNode<ProgressBar>("CanvasLayer/Slowmo");
     }
 
     public override void _Process(float delta)
     {
-        Score += delta;
+        Score += delta / Engine.TimeScale;
 
-        if (_player.Dead && !GameOver)
+        float camMaxY = 0.0f;
+        Vector2 centre = new Vector2(160.0f, 160.0f);
+        Vector2 cameraMouseOffset = GetGlobalMousePosition() - centre;
+        cameraMouseOffset.x = 0.0f;
+        cameraMouseOffset.y = Mathf.Min(camMaxY, cameraMouseOffset.y);
+        var camerOffset = -centre + GetViewport().Size * 0.5f - cameraMouseOffset * 0.2f;
+        var cameraTransform = new Transform2D(new Vector2(1.0f, 0.0f), new Vector2(0.0f, 1.0f), camerOffset);
+        GetViewport().CanvasTransform = cameraTransform;
+
+        if (_player != null && _player.Dead && !GameOver)
         {
             GameOver = true;
             _GUI.ShowLoseScreen();
+            DestroyPlayer();
         }
 
         _spawnTimer -= delta;
@@ -63,18 +93,48 @@ public class Game : Node2D
             Vector2 pos;
             if (_blocksLeft == 0 && _blocksRight == 0)
             {
-                pos = _spawned % 2 == 0 ? new Vector2(-16, 196) : new Vector2(336, 196);
+                pos = _spawned % 2 == 0 ? new Vector2(-16, 150) : new Vector2(336, 150);
                 SpawnCrate(pos);
             }
             else if (_blocksLeft == 0)
             {
-                pos = new Vector2(-16, 196);
+                pos = new Vector2(-32, 150);
                 SpawnCrate(pos);
             }
             else if (_blocksRight == 0)
             {
-                pos = new Vector2(336, 196);
+                pos = new Vector2(352, 150);
                 SpawnCrate(pos);
+            }
+        }
+
+        if (!GameOver)
+        {
+            _slowmoVal = Mathf.Min(_slowmoVal + delta * _slowmoRegen, 1.0f);
+            _slowmoBar.Value = _slowmoVal;
+            
+            _slowmoCDTimer -= delta;
+            if (_slowmoCDTimer < 0.0f)
+            {
+                
+                if (Input.IsActionPressed("slowmo") && _slowmoVal > 0.0f)
+                {
+                    _slowmoVal = Mathf.Max(_slowmoVal - _slowmoDegen * delta * 10.0f, 0.0f);
+                    Engine.TimeScale = 0.1f;
+                    _slowmoBar.Visible = true;
+                    
+                    if (_slowmoVal <= 0.0f)
+                    {
+                        _slowmoCD = true;
+                        _slowmoCDTimer = 2.5f;
+                        Engine.TimeScale = 1.0f;
+                    }
+                }
+                else
+                {
+                    Engine.TimeScale = 1.0f;
+                    _slowmoBar.Visible = _slowmoVal > 0.9f ? false : true;
+                }
             }
         }
     }
@@ -86,6 +146,22 @@ public class Game : Node2D
         vfx.GlobalPosition = block.GlobalPosition;
         vfx.Color = block.Sprite.Modulate;
         vfx.Emitting = true;
+
+        _sfx.Stream = _destroySfx[(int) (_rng.Randi() % _destroySfx.Count)];
+        _sfx.Play();
+    }
+    
+    public void DestroyPlayer()
+    {
+        CPUParticles2D vfx = _blockDestroyVFX.Instance() as CPUParticles2D;
+        AddChild(vfx);
+        vfx.GlobalPosition = _player.GlobalPosition;
+        vfx.Color = new Color("db1c1c");
+        vfx.Emitting = true;
+
+        _sfx.Stream = _dieSfx;
+        _sfx.Play();
+        _player.QueueFree();
     }
 
     public void SpawnCrate(Vector2 pos)
@@ -125,6 +201,7 @@ public class Game : Node2D
     {
         if (area.IsInGroup("roof"))
         {
+            DamageAmp = 2.0f;
             _blocksRight++;
             _blocksLeft++;
         }
