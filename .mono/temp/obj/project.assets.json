@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\dev\\ld50\\LD50.csproj",
-      "projectName": "LD50",
-      "projectPath": "C:\\dev\\ld50\\LD50.csproj",
+      "projectUniqueName": "C:\\dev\\stacktics\\Stacktics.csproj",
+      "projectName": "Stacktics",
+      "projectPath": "C:\\dev\\stacktics\\Stacktics.csproj",
       "packagesPath": "C:\\Users\\bigos\\.nuget\\packages\\",
-      "outputPath": "C:\\dev\\ld50\\.mono\\temp\\obj\\",
+      "outputPath": "C:\\dev\\stacktics\\.mono\\temp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

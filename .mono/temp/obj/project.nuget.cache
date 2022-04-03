@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "N74vFC7revgqSGpJjGrnV44z9atnfNBygg0HiiLaKher3jnF/II4XTT8m+Mn9X/mZCEVCsVqvRBosJGDWBBSAA==",
+  "dgSpecHash": "K1+bB06h/tzzlzj/osa2tvjIfZOocFVxeBGuPyy7Ao4D785ZUmzsGgki5f0PUvCWq84RBnvSf+QOS73AXKv+fQ==",
   "success": true,
-  "projectFilePath": "C:\\dev\\ld50\\LD50.csproj",
+  "projectFilePath": "C:\\dev\\stacktics\\Stacktics.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
