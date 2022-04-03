@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/roof.png-ef558185865d650a7a043184dbd49e32.stex"
+path="res://.import/block_S.png-a1a8d3b8d73e9b5b66f4ce976c51e777.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/roof.png"
-dest_files=[ "res://.import/roof.png-ef558185865d650a7a043184dbd49e32.stex" ]
+source_file="res://assets/block_S.png"
+dest_files=[ "res://.import/block_S.png-a1a8d3b8d73e9b5b66f4ce976c51e777.stex" ]
 
 [params]
 

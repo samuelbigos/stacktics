@@ -32,6 +32,7 @@ public class Player : KinematicBody2D
         {
             _potentialGrabs.Remove(_grabbed);
             _grabbed = null;
+            _trajectory.Visible = false;
         }
 
         if (Input.IsActionPressed("grab"))
@@ -76,7 +77,7 @@ public class Player : KinematicBody2D
         {
             if (_grabbed != null)
             {
-                _trajectory.Setup(GetThrowImpulse());
+                _trajectory.Setup(GetThrowImpulse(), _grabbed.Sprite, _grabbed.Rotation);
                 _trajectory.GlobalPosition = _grabber.GlobalPosition;
             }
         }

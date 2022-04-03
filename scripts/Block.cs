@@ -6,9 +6,10 @@ public class Block : RigidBody2D
     [Export] public float _maxHealth = 1.0f;
     [Export] public float _spinSpeed = 10.0f;
     [Export] public float _dampVal = 0.2f;
+
+    public Sprite Sprite;
     
     private float _currentHealth;
-
     private bool _isHeld;
     private bool _throw;
     private Vector2 _throwImpulse;
@@ -18,6 +19,7 @@ public class Block : RigidBody2D
     public override void _Ready()
     {
         _currentHealth = _maxHealth;
+        Sprite = GetNode<Sprite>("Sprite");
     }
 
     public void Pickup()
@@ -99,6 +101,7 @@ public class Block : RigidBody2D
         if (_dampLinVel)
         {
             state.LinearVelocity = state.LinearVelocity * _dampVal;
+            state.AngularVelocity = state.AngularVelocity * _dampVal;
             _dampLinVel = false;
         }
     }
@@ -106,7 +109,7 @@ public class Block : RigidBody2D
     public void _on_Crate_body_entered(PhysicsBody2D other)
     {
         // when a crate hits another crate, damp the velocity to make it easier to stack them.
-        if (other.IsInGroup("crate"))
+        if (other.IsInGroup("crate") || other.IsInGroup("floor"))
         {
             _dampLinVel = true;
         }
