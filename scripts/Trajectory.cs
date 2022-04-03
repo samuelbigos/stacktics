@@ -13,9 +13,6 @@ public class Trajectory : Line2D
         _preview.Add(GetNode<Sprite>("Sprite3"));
         _preview.Add(GetNode<Sprite>("Sprite4"));
         _preview.Add(GetNode<Sprite>("Sprite5"));
-        _preview.Add(GetNode<Sprite>("Sprite6"));
-        _preview.Add(GetNode<Sprite>("Sprite7"));
-        _preview.Add(GetNode<Sprite>("Sprite8"));
 
         for (int i = 0; i < _preview.Count; i++)
         {
@@ -27,7 +24,7 @@ public class Trajectory : Line2D
     {
         for (int i = 0; i < _preview.Count; i++)
         {
-            _previewPoints[i] += delta * 66.0f;
+            _previewPoints[i] += delta * 100.0f;
             int p = (int) _previewPoints[i];
             p = p % (Points.Length - 1);
             _preview[i].GlobalPosition = GlobalPosition + Points[p];
@@ -56,7 +53,7 @@ public class Trajectory : Line2D
             _preview[i].Texture = preview.Texture;
             _preview[i].Rotation = rot;
             Color col = preview.Modulate;
-            col.a *= 0.5f;
+            col.a *= 0.3f;
             _preview[i].Modulate = col;
         }
     }

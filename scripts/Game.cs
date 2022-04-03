@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Game : Node2D
 {
     [Export] public List<PackedScene> _blockScenes;
+    [Export] public PackedScene _blockDestroyVFX;
     [Export] public float _spawnFreq;
     
     [Export] public Color WallColour;
@@ -27,8 +28,10 @@ public class Game : Node2D
     {
         Instance = this;
         
-        for (int i = 0; i < 5; i++)
-            SpawnCrate(new Vector2(_rng.Randi() % 480, 128 + _rng.Randi() % 64));
+        _rng.Randomize();
+        
+        for (int i = 0; i < 3; i++)
+            SpawnCrate(new Vector2(32 + _rng.Randi() % 288, 128 + _rng.Randi() % 64));
 
         _spawnTimer = _spawnFreq;
 
@@ -60,7 +63,7 @@ public class Game : Node2D
             Vector2 pos;
             if (_blocksLeft == 0 && _blocksRight == 0)
             {
-                pos = _spawned % 2 == 0 ? new Vector2(-32, 128) : new Vector2(512, 128);
+                pos = _spawned % 2 == 0 ? new Vector2(-16, 196) : new Vector2(336, 196);
                 SpawnCrate(pos);
             }
             else if (_blocksLeft == 0)
@@ -74,6 +77,15 @@ public class Game : Node2D
                 SpawnCrate(pos);
             }
         }
+    }
+
+    public void DestroyBlock(Block block)
+    {
+        CPUParticles2D vfx = _blockDestroyVFX.Instance() as CPUParticles2D;
+        AddChild(vfx);
+        vfx.GlobalPosition = block.GlobalPosition;
+        vfx.Color = block.Sprite.Modulate;
+        vfx.Emitting = true;
     }
 
     public void SpawnCrate(Vector2 pos)
@@ -107,6 +119,15 @@ public class Game : Node2D
     {
         if (other.IsInGroup("crate"))
             _blocksRight--;
+    }
+
+    public void _on_StopSpawnLeft_area_entered(Area2D area)
+    {
+        if (area.IsInGroup("roof"))
+        {
+            _blocksRight++;
+            _blocksLeft++;
+        }
     }
 
     public void _on_Restart_button_down()

@@ -21,7 +21,7 @@ _dampVal = 0.1
 shape = SubResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="."]
-modulate = Color( 0.768627, 0.768627, 0.529412, 1 )
+modulate = Color( 0.247059, 0.184314, 0.317647, 1 )
 texture = ExtResource( 1 )
 
 [connection signal="body_entered" from="." to="." method="_on_Crate_body_entered"]

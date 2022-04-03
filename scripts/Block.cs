@@ -7,6 +7,15 @@ public class Block : RigidBody2D
     [Export] public float _spinSpeed = 10.0f;
     [Export] public float _dampVal = 0.2f;
 
+    private OpenSimplexNoise _noise = new OpenSimplexNoise();
+    private RandomNumberGenerator _rng = new RandomNumberGenerator();
+    
+    private float Decay = 1.0f;
+    private Vector2 MaxOffset = new Vector2(0.02f, 0.02f);
+    private float MaxRoll = 0.175f;
+    private int TraumaPower = 2;
+    private float MaxTrauma = 0.5f;
+
     public Sprite Sprite;
     
     private float _currentHealth;
@@ -16,10 +25,18 @@ public class Block : RigidBody2D
     private float _mouseWheel;
     private bool _dampLinVel;
 
+    private float _trauma = 0.0f;
+    private float _noiseY = 0.0f;
+
     public override void _Ready()
     {
         _currentHealth = _maxHealth;
         Sprite = GetNode<Sprite>("Sprite");
+
+        MaxOffset = MaxOffset * GetViewportRect().Size;
+        _noise.Seed = (int)_rng.Randi();
+        _noise.Period = 4;
+        _noise.Octaves = 2;
     }
 
     public void Pickup()
@@ -42,11 +59,37 @@ public class Block : RigidBody2D
         _currentHealth -= damage;
         if (_currentHealth <= 0.0f)
             Destroy();
+
+        AddTrauma(damage * 2.0f);
+    }
+
+    private void AddTrauma(float trauma)
+    {
+        _trauma = Mathf.Min(_trauma + trauma, MaxTrauma);
     }
 
     private void Destroy()
     {
+        Game.Instance.DestroyBlock(this);
         QueueFree();
+    }
+
+    public override void _Process(float delta)
+    {
+        base._Process(delta);
+
+        if (_trauma > 0.0f)
+        {
+            _trauma = Mathf.Max(_trauma - Decay * delta, 0.0f);
+            var amount = Mathf.Pow(_trauma, TraumaPower);
+            var rot = MaxRoll * amount * _noise.GetNoise2d(_noise.Seed, _noiseY);
+            var offset = new Vector2(0.0f, 0.0f);
+            offset.x = MaxOffset.x * amount * _noise.GetNoise2d(_noise.Seed * 2.0f, _noiseY);
+            offset.y = MaxOffset.y * amount * _noise.GetNoise2d(_noise.Seed * 3.0f, _noiseY);
+            _noiseY += delta * 100.0f;
+
+            Sprite.Transform = new Transform2D(rot, offset);
+        }
     }
     
     public override void _UnhandledInput(InputEvent @event)
