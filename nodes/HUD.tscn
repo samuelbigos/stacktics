@@ -1,0 +1,185 @@
+[gd_scene format=2]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+pause_mode = 2
+
+[node name="Score" type="Label" parent="."]
+margin_left = 64.0
+margin_top = 56.0
+margin_right = 148.0
+margin_bottom = 84.0
+text = "000000"
+
+[node name="LoseScreen" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LoseScreen"]
+margin_left = 28.0
+margin_right = 228.0
+margin_bottom = 335.0
+
+[node name="Label" type="Label" parent="LoseScreen/VBoxContainer"]
+margin_right = 200.0
+margin_bottom = 14.0
+custom_colors/font_color = Color( 0.0509804, 0.168627, 0.270588, 1 )
+text = "You scored:"
+align = 1
+
+[node name="Control2" type="Control" parent="LoseScreen/VBoxContainer"]
+margin_top = 18.0
+margin_right = 200.0
+margin_bottom = 43.0
+rect_min_size = Vector2( 0, 25 )
+
+[node name="Score" type="Label" parent="LoseScreen/VBoxContainer"]
+margin_top = 47.0
+margin_right = 200.0
+margin_bottom = 61.0
+text = "45264614"
+align = 1
+
+[node name="Control" type="Control" parent="LoseScreen/VBoxContainer"]
+margin_top = 65.0
+margin_right = 200.0
+margin_bottom = 265.0
+rect_min_size = Vector2( 0, 200 )
+
+[node name="MenuButton" type="Button" parent="LoseScreen/VBoxContainer"]
+margin_top = 269.0
+margin_right = 200.0
+margin_bottom = 335.0
+rect_min_size = Vector2( 200, 66 )
+focus_mode = 0
+enabled_focus_mode = 0
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="LoseScreen/VBoxContainer/MenuButton"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Outline" type="TextureRect" parent="LoseScreen/VBoxContainer/MenuButton"]
+margin_right = 200.0
+margin_bottom = 66.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="LoseScreen/VBoxContainer/MenuButton/Outline"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -67.0
+margin_top = -14.0
+margin_right = 67.0
+margin_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Restart"
+align = 1
+valign = 1
+
+[node name="ScoreContainer" type="CenterContainer" parent="LoseScreen"]
+margin_left = 128.0
+margin_top = 167.0
+margin_right = 128.0
+margin_bottom = 167.0
+
+[node name="Stars" type="HBoxContainer" parent="LoseScreen"]
+margin_left = 120.0
+margin_top = 167.0
+margin_right = 136.0
+margin_bottom = 167.0
+
+[node name="Star" type="TextureRect" parent="LoseScreen/Stars"]
+self_modulate = Color( 0.0509804, 0.168627, 0.270588, 1 )
+
+[node name="StarInner" type="TextureRect" parent="LoseScreen/Stars/Star"]
+visible = false
+self_modulate = Color( 1, 0.92549, 0.839216, 1 )
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 51.0
+margin_bottom = 50.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Star2" type="TextureRect" parent="LoseScreen/Stars"]
+self_modulate = Color( 0.0509804, 0.168627, 0.270588, 1 )
+margin_left = 4.0
+margin_right = 4.0
+
+[node name="StarInner" type="TextureRect" parent="LoseScreen/Stars/Star2"]
+visible = false
+self_modulate = Color( 1, 0.92549, 0.839216, 1 )
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 51.0
+margin_bottom = 50.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Star3" type="TextureRect" parent="LoseScreen/Stars"]
+self_modulate = Color( 0.0509804, 0.168627, 0.270588, 1 )
+margin_left = 8.0
+margin_right = 8.0
+
+[node name="StarInner" type="TextureRect" parent="LoseScreen/Stars/Star3"]
+visible = false
+self_modulate = Color( 1, 0.92549, 0.839216, 1 )
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 51.0
+margin_bottom = 50.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Star4" type="TextureRect" parent="LoseScreen/Stars"]
+self_modulate = Color( 0.0509804, 0.168627, 0.270588, 1 )
+margin_left = 12.0
+margin_right = 12.0
+
+[node name="StarInner" type="TextureRect" parent="LoseScreen/Stars/Star4"]
+visible = false
+self_modulate = Color( 1, 0.92549, 0.839216, 1 )
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 51.0
+margin_bottom = 50.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Star5" type="TextureRect" parent="LoseScreen/Stars"]
+self_modulate = Color( 0.0509804, 0.168627, 0.270588, 1 )
+margin_left = 16.0
+margin_right = 16.0
+
+[node name="StarInner" type="TextureRect" parent="LoseScreen/Stars/Star5"]
+visible = false
+self_modulate = Color( 1, 0.92549, 0.839216, 1 )
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 51.0
+margin_bottom = 50.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="button_up" from="LoseScreen/VBoxContainer/MenuButton" to="." method="_on_MenuButton_button_up"]
+[connection signal="mouse_entered" from="LoseScreen/VBoxContainer/MenuButton" to="." method="_on_MenuButton_mouse_entered"]
+[connection signal="mouse_exited" from="LoseScreen/VBoxContainer/MenuButton" to="." method="_on_MenuButton_mouse_exited"]
