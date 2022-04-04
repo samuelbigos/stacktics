@@ -15,6 +15,9 @@ public class Roof : StaticBody2D
 
       public override void _Process(float delta)
       {
+          if (Game.Instance.InIntro)
+              return;
+          
           if (_contactingBodies.Count == 0)
           {
               GlobalPosition += Vector2.Down * _speed;

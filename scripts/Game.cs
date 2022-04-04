@@ -23,6 +23,7 @@ public class Game : Node2D
     public float Score = 0.0f;
     public bool GameOver = false;
     public float DamageAmp = 1.0f;
+    public bool InIntro = false;
     
     private RandomNumberGenerator _rng = new RandomNumberGenerator();
     private GUI _GUI;
@@ -38,7 +39,9 @@ public class Game : Node2D
     private float _slowmoVal = 1.0f;
     private bool _slowmoCD;
     private float _slowmoCDTimer;
-    
+    private Button _startButton;
+    private float _time;
+
     public override void _Ready()
     {
         Instance = this;
@@ -64,12 +67,21 @@ public class Game : Node2D
         _cam = GetNode<Camera2D>("Camera2D");
         _camYMax = _cam.GlobalPosition.y;
         _slowmoBar = GetNode<ProgressBar>("CanvasLayer/Slowmo");
+
+        if (GetNode<Global>("/root/Global").InIntro)
+        {
+            _startButton = GetNode<Button>("CanvasLayer/StartButton");
+            _startButton.Visible = true;
+            GetNode<Control>("CanvasLayer/Score").Visible = false;
+            InIntro = true;
+        }
     }
 
     public override void _Process(float delta)
     {
         Score += delta / Engine.TimeScale;
-
+        _time += delta / Engine.TimeScale;
+        
         float camMaxY = 0.0f;
         Vector2 centre = new Vector2(160.0f, 160.0f);
         Vector2 cameraMouseOffset = GetGlobalMousePosition() - centre;
@@ -78,6 +90,14 @@ public class Game : Node2D
         var camerOffset = -centre + GetViewport().Size * 0.5f - cameraMouseOffset * 0.2f;
         var cameraTransform = new Transform2D(new Vector2(1.0f, 0.0f), new Vector2(0.0f, 1.0f), camerOffset);
         GetViewport().CanvasTransform = cameraTransform;
+
+        if (InIntro)
+        {
+            _startButton.RectPivotOffset = _startButton.RectSize / 2.0f;
+            _startButton.RectScale = new Vector2(1.25f + Mathf.Abs(Mathf.Sin(_time)) * 0.5f,
+                1.25f + Mathf.Abs(Mathf.Sin(_time)) * 0.5f);;
+            _startButton.RectRotation = (Mathf.Sin(_time)) * 5.0f;
+        }
 
         if (_player != null && _player.Dead && !GameOver)
         {
@@ -209,6 +229,12 @@ public class Game : Node2D
 
     public void _on_Restart_button_down()
     {
+        GetTree().ReloadCurrentScene();
+    }
+
+    public void _on_StartButton_button_down()
+    {
+        GetNode<Global>("/root/Global").InIntro = false;
         GetTree().ReloadCurrentScene();
     }
 }

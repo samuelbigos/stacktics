@@ -14,6 +14,10 @@ config/name="Stacktics"
 run/main_scene="res://nodes/Game.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Global="*res://nodes/Global.tscn"
+
 [display]
 
 window/size/width=320
