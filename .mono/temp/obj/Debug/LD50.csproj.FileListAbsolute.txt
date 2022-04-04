@@ -1,8 +1,0 @@
-C:\dev\ld50\.mono\temp\bin\Debug\LD50.dll
-C:\dev\ld50\.mono\temp\bin\Debug\LD50.pdb
-C:\dev\ld50\.mono\temp\obj\Debug\LD50.csprojAssemblyReference.cache
-C:\dev\ld50\.mono\temp\obj\Debug\LD50.AssemblyInfoInputs.cache
-C:\dev\ld50\.mono\temp\obj\Debug\LD50.AssemblyInfo.cs
-C:\dev\ld50\.mono\temp\obj\Debug\LD50.csproj.CoreCompileInputs.cache
-C:\dev\ld50\.mono\temp\obj\Debug\LD50.dll
-C:\dev\ld50\.mono\temp\obj\Debug\LD50.pdb
