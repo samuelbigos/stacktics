@@ -48,7 +48,7 @@ public class Player : KinematicBody2D
             _trajectory.Visible = false;
         }
 
-        if (_grabbed == null)
+        if (!IsInstanceValid(_grabbed))
         {
             _footstepTimer -= delta * Mathf.Clamp(_vel.Length(), 1.0f, 10.0f);
             _sprite.Offset = new Vector2(0.0f, Mathf.Sin(-Mathf.Clamp(_footstepTimer, 0.0f, 1.0f) * 5.0f));
@@ -123,7 +123,7 @@ public class Player : KinematicBody2D
 
     private Vector2 GetThrowImpulse()
     {
-        if (_grabbed == null)
+        if (!IsInstanceValid(_grabbed))
             return Vector2.Zero;
          
         return (GetViewport().GetMousePosition() - _grabber.GlobalPosition) * _throwStrength; 
@@ -143,7 +143,7 @@ public class Player : KinematicBody2D
             target.y = target.y = GlobalPosition.y;
             Vector2 gravity = Vector2.Down * Game.Instance.Gravity;
             _vel = (target - GlobalPosition).Clamped(_moveMax);
-            if (_grabbed == null)
+            if (!IsInstanceValid(_grabbed))
             {
                 MoveAndSlide(_vel * _moveAccel + gravity);
             }
@@ -152,7 +152,7 @@ public class Player : KinematicBody2D
             _sprite.Rotation = Mathf.Lerp(-Mathf.Pi * 0.25f, Mathf.Pi * 0.25f, Mathf.Clamp(l, 0.0f, 1.0f));
         }
 
-        if (_grabbed != null)
+        if (IsInstanceValid(_grabbed))
         {
             _grabbed.GlobalPosition = _grabber.GlobalPosition;
         }

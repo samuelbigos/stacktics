@@ -20,7 +20,7 @@ public class Roof : StaticBody2D
           
           if (_contactingBodies.Count == 0)
           {
-              GlobalPosition += Vector2.Down * _speed;
+              GlobalPosition += Vector2.Down * _speed * delta;
           }
           
           foreach (Block crate in _contactingBodies)
